@@ -13,7 +13,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var billField: UITextField!
     @IBOutlet weak var tipLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
+    @IBOutlet weak var twoFirends: UILabel!
+    @IBOutlet weak var threeFirends: UILabel!
+    
     @IBOutlet weak var tipControl: UISegmentedControl!
+    var currencyDict = ["en_US","de_DE","cy_GB"]
+    var placeHolder = ["$","€","£"]
+    var currentCurrency : Int!
     override func viewDidLoad() {
         super.viewDidLoad()
                 // Do any additional setup after loading the view, typically from a nib.
@@ -22,8 +28,17 @@ class ViewController: UIViewController {
         let defaults = UserDefaults.standard
         let intValue = defaults.integer(forKey:"selectedSegment")
         tipControl.selectedSegmentIndex = intValue
+        currentCurrency = defaults.integer(forKey: "currencySegment")
+        billField.placeholder = placeHolder[currentCurrency]
+        calculateTip(self)
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        billField.becomeFirstResponder()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -40,8 +55,19 @@ class ViewController: UIViewController {
         let bill = Double(billField.text!) ?? 0
         let tip = bill * tipPercantages[tipControl.selectedSegmentIndex]
         let total = bill + tip
-        tipLabel.text = String(format: "$%.2f", tip)
-        totalLabel.text = String(format: "$%.2f", total)
+        
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.locale = Locale(identifier: currencyDict[currentCurrency])
+
+
+        tipLabel.text = "\(numberFormatter.string(from: NSNumber(value: tip))!)"
+        totalLabel.text = "\(numberFormatter.string(from: NSNumber(value: total))!)"
+        twoFirends.text = "\(numberFormatter.string(from: NSNumber(value: total/2))!)"
+        threeFirends.text = "\(numberFormatter.string(from: NSNumber(value: total/3))!)"
+        
+        
     }
 
 }

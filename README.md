@@ -1,1 +1,2 @@
 # Tip-App
+![](demo.gif)

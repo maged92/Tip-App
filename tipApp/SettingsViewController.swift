@@ -11,11 +11,18 @@ import UIKit
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var defaultTipControl: UISegmentedControl!
+    
+    @IBOutlet weak var currencyControl: UISegmentedControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let defaults = UserDefaults.standard
         let intValue = defaults.integer(forKey:"selectedSegment")
         defaultTipControl.selectedSegmentIndex = intValue
+        
+        let currencyValue = defaults.integer(forKey: "currencySegment")
+        currencyControl.selectedSegmentIndex = currencyValue
         // Do any additional setup after loading the view.
     }
 
@@ -33,6 +40,13 @@ class SettingsViewController: UIViewController {
         defaults.synchronize()
     }
 
+    
+    @IBAction func CurrencyController(_ sender: AnyObject) {
+        let defaults = UserDefaults.standard
+        defaults.set(self.currencyControl.selectedSegmentIndex, forKey: "currencySegment")
+        defaults.synchronize()
+
+    }
     /*
     // MARK: - Navigation
 
